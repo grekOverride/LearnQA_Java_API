@@ -24,7 +24,7 @@ public class HelloWorldTest {
                         .get("https://playground.learnqa.ru/api/get_json_homework")
                         .jsonPath();
 
-       // response.prettyPrint();
+        // response.prettyPrint();
 
         String secondMsgFromResponse =
                 response.get("messages[1].message");
@@ -47,4 +47,32 @@ public class HelloWorldTest {
         System.out.println(locationHeader);
     }
 
+
+    @Test
+    @DisplayName("Ex7: Долгий редирект")
+    public void testEx7() {
+
+        Response response =
+                makeRequest("https://playground.learnqa.ru/api/long_redirect");
+
+        int statusCode = response.getStatusCode();
+        int cntRedirects = 0;
+        while (statusCode != 200) {
+            cntRedirects++;
+            System.out.println("cntRedirects = " + cntRedirects);
+
+            response = makeRequest(response.getHeader("Location"));
+            statusCode = response.getStatusCode();
+        }
+    }
+
+    private Response makeRequest(String url) {
+        return RestAssured
+                .given()
+                .redirects()
+                .follow(false)
+                .when()
+                .get(url)
+                .andReturn();
+    }
 }

@@ -253,4 +253,18 @@ public class HelloWorldTest {
                 "String \"" + s + "\" is shorter than 15 characters, but it must be longer");
     }
 
+    @Test
+    @DisplayName("Ex11: Тест запроса на метод cookie")
+    public void testEx11() {
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .andReturn();
+
+        Map<String, String> cookies = response.getCookies();
+
+        assertEquals(200, response.getStatusCode(), "Unexpected status code: " + response.getStatusCode());
+        assertTrue(cookies.containsKey("HomeWork"), "Response doesn't have 'HomeWork' cookie");
+        assertEquals(cookies.get("HomeWork"), "hw_value","Unexpected 'HomeWork' cookie value: " + cookies.get("HomeWork") );
+    }
+
 }

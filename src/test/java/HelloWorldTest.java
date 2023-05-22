@@ -4,14 +4,15 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HelloWorldTest {
 
@@ -242,6 +243,14 @@ public class HelloWorldTest {
             }
         }
 
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"This String is longest String in the World", "This is not"})
+    @DisplayName("Ex10: Тест на короткую фразу")
+    public void testEx10(String s) {
+        assertTrue(s.length() > 15,
+                "String \"" + s + "\" is shorter than 15 characters, but it must be longer");
     }
 
 }

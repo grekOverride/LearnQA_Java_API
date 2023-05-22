@@ -4,6 +4,9 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class HelloWorldTest {
 
     @Test
@@ -74,5 +77,51 @@ public class HelloWorldTest {
                 .when()
                 .get(url)
                 .andReturn();
+    }
+
+
+    @Test
+    @DisplayName("Ex8: Токены")
+    public void testEx8() {
+
+        String statusUnready = "Job is NOT ready";
+        String statusReady = "Job is ready";
+
+        JsonPath responseFirst =
+                makeRequestForLongTimeJob();
+
+        String token = responseFirst.get("token").toString();
+        long seconds = ((Number) responseFirst.get("seconds")).longValue();
+
+        JsonPath responseSecond =
+                makeRequestForLongTimeJob(token);
+
+        assertEquals(statusUnready, responseSecond.get("status"));
+
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        JsonPath responseThird =
+                makeRequestForLongTimeJob(token);
+
+        assertEquals(statusReady, responseThird.get("status"));
+        assertNotNull(responseThird.get("result"));
+    }
+
+    private JsonPath makeRequestForLongTimeJob() {
+        return RestAssured
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .jsonPath();
+    }
+
+    private JsonPath makeRequestForLongTimeJob(String token) {
+        return RestAssured
+                .given()
+                .queryParam("token", token)
+                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .jsonPath();
     }
 }

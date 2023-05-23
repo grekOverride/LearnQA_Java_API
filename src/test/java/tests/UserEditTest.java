@@ -42,61 +42,6 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
-    //test from lecture
-    public void testEditJustCreatedTest() {
-        //Create user
-        Map<String, String> userDataForAuthorization =
-                getRegistrationData();
-
-        Response responseCreateAuth =
-                apiCoreRequests.makePostRequest(
-                        "https://playground.learnqa.ru/api/user/",
-                        userDataForAuthorization);
-
-
-        Assertions.assertResponseCodeEquals(responseCreateAuth, 200);
-        Assertions.assertJsonHasField(responseCreateAuth, "id");
-
-        String createdUserId2 = responseCreateAuth.jsonPath().get("id");
-
-        //LOGIN
-        Response responseGetAuth =
-                login(userDataForAuthorization);
-
-        Assertions.assertResponseCodeEquals(responseGetAuth, 200);
-
-        String header = this.getHeader(responseGetAuth, "x-csrf-token");
-        String cookie = this.getCookie(responseGetAuth, "auth_sid");
-
-        //EDIT created user
-        String newName = UUID.randomUUID().toString();
-
-        Map<String, String> editDataForFirstNameChange = new HashMap<>();
-        editDataForFirstNameChange.put("firstName", newName);
-
-        Response responseEditUser =
-                apiCoreRequests.makePutRequest(
-                        "https://playground.learnqa.ru/api/user/" + createdUserId2,
-                        editDataForFirstNameChange,
-                        header,
-                        cookie);
-
-        System.out.println(responseEditUser.asString());
-        Assertions.assertResponseCodeEquals(responseEditUser, 200);
-
-
-        //GET
-        Response responseUserData =
-                apiCoreRequests.makeGetRequest(
-                        "https://playground.learnqa.ru/api/user/" + createdUserId2,
-                        header,
-                        cookie);
-
-        Assertions.assertJsonByName(responseUserData, "firstName", newName);
-
-    }
-
-    @Test
     @DisplayName("Ex17_1: Изменить данные пользователя, будучи неавторизованными")
     @Description("Ex17: Негативные тесты на PUT")
     public void testEx17_1() {
@@ -207,19 +152,7 @@ public class UserEditTest extends BaseTestCase {
 
     }
 
-    private Response login(Map<String, String> userDataForAuthorization) {
-        Map<String, String> authDataFromUser = new HashMap<>();
 
-        authDataFromUser.put("email", userDataForAuthorization.get("email"));
-        authDataFromUser.put("password", userDataForAuthorization.get("password"));
-
-        return apiCoreRequests
-                .makePostRequest(
-                        "https://playground.learnqa.ru/api/user/login",
-                        authDataFromUser);
-
-
-    }
 
 
     @Test

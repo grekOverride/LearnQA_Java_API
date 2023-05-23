@@ -3,6 +3,7 @@ package lib;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.hasKey;
@@ -30,6 +31,22 @@ public class BaseTestCase {
     protected int getIntFromJson(Response response, String name) {
         response.then().assertThat().body("$", hasKey(name));
         return response.jsonPath().getInt(name);
+
+    }
+
+    protected static Response login(Map<String, String> userDataForAuthorization) {
+         ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+
+        Map<String, String> authDataFromUser = new HashMap<>();
+
+        authDataFromUser.put("email", userDataForAuthorization.get("email"));
+        authDataFromUser.put("password", userDataForAuthorization.get("password"));
+
+        return apiCoreRequests
+                .makePostRequest(
+                        "https://playground.learnqa.ru/api/user/login",
+                        authDataFromUser);
+
 
     }
 }

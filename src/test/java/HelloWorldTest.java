@@ -1,5 +1,6 @@
 import io.restassured.RestAssured;
 import io.restassured.http.Cookies;
+import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -253,18 +254,29 @@ public class HelloWorldTest {
                 "String \"" + s + "\" is shorter than 15 characters, but it must be longer");
     }
 
-    @Test
-    @DisplayName("Ex11: Тест запроса на метод cookie")
-    public void testEx11() {
+    @ParameterizedTest
+    @ValueSource(strings = {"cookie", "header"})
+    @DisplayName("Ex11: Тест запроса на метод cookie. " + "Ex12: Тест запроса на метод header")
+    public void testEx12(String uri) {
         Response response = RestAssured
-                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .get("https://playground.learnqa.ru/api/homework_" + uri)
                 .andReturn();
 
-        Map<String, String> cookies = response.getCookies();
-
         assertEquals(200, response.getStatusCode(), "Unexpected status code: " + response.getStatusCode());
-        assertTrue(cookies.containsKey("HomeWork"), "Response doesn't have 'HomeWork' cookie");
-        assertEquals(cookies.get("HomeWork"), "hw_value","Unexpected 'HomeWork' cookie value: " + cookies.get("HomeWork") );
+
+        if (uri.equals("cookie")) {
+            Map<String, String> cookies = response.getCookies();
+
+            assertTrue(cookies.containsKey("HomeWork"), "Response doesn't have 'HomeWork' cookie");
+            assertEquals(cookies.get("HomeWork"), "hw_value", "Unexpected 'HomeWork' cookie value: " + cookies.get("HomeWork"));
+        } else if (uri.equals("header")) {
+            Headers headers = response.getHeaders();
+
+            assertTrue(headers.hasHeaderWithName("x-secret-homework-header"), "Response doesn't have 'x-secret-homework-header' header");
+            assertEquals(headers.get("x-secret-homework-header").getValue(), "Some secret value", "Unexpected 'x-secret-homework-header' header value: " + headers.get("x-secret-homework-header"));
+        } else {
+            throw new RuntimeException("Unexpected uri for current test");
+        }
     }
 
 }

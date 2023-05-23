@@ -50,17 +50,9 @@ public class UserRegisterTest extends BaseTestCase {
     @DisplayName("Ex15_2: Создание пользователя без указания одного из полей")
     @Description("Ex15: Тесты на метод user")
     public void testEx15_2(String emptyField) {
-        String email;
-
         Map<String, String> userData = new HashMap<>();
 
-        if (!emptyField.equals("email")) {
-            email = DataGenerator.getRandomEmail();
-            userData.put("email", email);
-            userData.put(emptyField, null);
-        } else {
-            userData.put("email", null);
-        }
+        userData.put(emptyField, null);
 
         userData =
                 getRegistrationData(userData);
@@ -82,11 +74,7 @@ public class UserRegisterTest extends BaseTestCase {
     @DisplayName("Ex15_3/Ex15_4: Создание пользователя с очень коротким/длинным именем")
     @Description("Ex15: Тесты на метод user")
     public void testEx15_3(String username) {
-        String email = DataGenerator.getRandomEmail();
-
         Map<String, String> userData = new HashMap<>();
-        userData.put("email", email);
-
         userData.put("username", username);
 
         userData =

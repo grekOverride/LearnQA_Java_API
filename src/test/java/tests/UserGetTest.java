@@ -23,19 +23,13 @@ public class UserGetTest extends BaseTestCase {
     @DisplayName("Ex16: Запрос данных другого пользователя")
     public void testEx16() {
         //Create user
-        String email = DataGenerator.getRandomEmail();
+        Map<String, String> userData=
+                getRegistrationData();
 
-        Map<String, String> userData = new HashMap<>();
-        userData.put("email", email);
-
-        userData =
-                getRegistrationData(userData);
-
-        Response responseCreateAuth = RestAssured
-                .given()
-                .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
-                .andReturn();
+        Response responseCreateAuth =
+                apiCoreRequests.makePostRequest(
+                        "https://playground.learnqa.ru/api/user/",
+                        userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 200);
         Assertions.assertJsonHasField(responseCreateAuth, "id");

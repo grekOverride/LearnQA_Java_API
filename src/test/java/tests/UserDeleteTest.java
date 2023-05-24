@@ -1,6 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -13,6 +13,9 @@ import java.util.Map;
 
 import static lib.DataGenerator.getRegistrationData;
 
+@Owner("kateSt")
+@Link("https://software-testing.ru/lms/mod/assign/view.php?id=326423")
+@Epic("Ex18: Тесты на DELETE")
 public class UserDeleteTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
@@ -20,7 +23,6 @@ public class UserDeleteTest extends BaseTestCase {
 
     @Test
     @DisplayName("Ex18_1: Попытка удалить пользователя по ID 2")
-    @Description("Ex18: Тесты на DELETE")
     public void testEx18_1() {
         //Auth
         Map<String, String> userDataForAuthorization = new HashMap<>();
@@ -47,7 +49,6 @@ public class UserDeleteTest extends BaseTestCase {
 
     @Test
     @DisplayName("Ex18_2: Удаление созданного пользователя")
-    @Description("Ex18: Тесты на DELETE")
     public void testEx18_2() {
         //create
         Map<String, String> createdUserData;
@@ -96,7 +97,6 @@ public class UserDeleteTest extends BaseTestCase {
 
     @Test
     @DisplayName("Ex18_3: Попытка удалить пользователя, будучи авторизованными другим пользователем")
-    @Description("Ex18: Тесты на DELETE")
     public void testEx18_3() {
         //create
         Map<String, String> createdUserData;

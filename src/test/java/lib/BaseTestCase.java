@@ -1,5 +1,6 @@
 package lib;
 
+import io.qameta.allure.Step;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 
@@ -34,6 +35,8 @@ public class BaseTestCase {
 
     }
 
+
+    @Step("Авторизация пользователя")
     protected static Response login(Map<String, String> userDataForAuthorization) {
          ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
